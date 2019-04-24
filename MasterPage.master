@@ -1,0 +1,265 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>SGIPC | Special Group Interested in Programming Contest</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="master.js"></script>
+    <style>
+        body
+        {
+            background-image: url("style/background.png");
+        }
+    </style>
+    <script src="jquery.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#u_id').keyup(function () {
+                var userName = $(this).val();
+                if (userName.length >= 3) {
+                    $.ajax({
+                        url: 'WebService.asmx/UserNameExists',
+                        method: 'post',
+                        data: { userName: userName },
+                        dataType: 'json',
+                        success: function (data) {
+                            var divElement = $('#divOutput');
+                            if (data.UserNameInUse) {
+                                divElement.text(data.UserName + ' already in use');
+                                divElement.css('color', 'red');
+                            }
+                            else {
+                                divElement.text(data.UserName + ' available')
+                                divElement.css('color', 'green');
+                            }
+                        },
+                        error: function (err) {
+                            alert(err);
+                        }
+                    }); return false;
+                }
+            });
+        });
+    </script>
+    
+</head>
+<body>
+
+    <form id="form1" runat="server">
+
+
+            <div style="background:#333333; height:100px;">
+                    <div style="width: 22%; float: left; height: 71px; margin-top: 2%;margin-left:3%;">
+                        <img src="style/logo.png" style="width: 60%; height: 98%; margin-left: 0px" />
+                    </div>
+                    <div style="width: 50%; float: right; margin-top: 3%;margin-right:3%;">
+                        <table style="float: right;">
+                            <tr>
+                                <td>
+                                    <div runat="server" id="guest">
+                                 
+                                        <asp:Button ID="display_log" runat="server" CssClass="button" Text="Login" OnClick="display_log_Click" />
+                                        <asp:Button ID="display_reg" runat="server" CssClass="button" Text="Register" OnClick="display_reg_Click" />
+
+                                    </div>
+                                    <div runat="server" id="notguest">
+                                        <asp:Button ID="profile" runat="server" CssClass="button" Text="id" OnClick="Profile_Click" />
+                                        <asp:Button ID="logout" runat="server" CssClass="button" Text="logout" OnClick="Logout_Click" />
+
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                        </table>
+                    </div>
+
+            </div>
+            <div>
+                <div class="navigation">
+                    <ul class="nav_ul">
+                        <li><a href="home.aspx">Home</a></li>
+                        <li><a href="Blog.aspx">Blog</a></li>
+                        <li><a href="Contest.aspx">Contest</a></li>
+                        <li><a href="Resources.aspx" class="dropbtn">Resources</a></li>
+                        <li><a href="Members.aspx">Members</a></li>
+                        <li><a href="About_SGIPC.aspx">About SGIPC</a></li>
+                        <li><a href="Update.aspx">Update Database</a></li>
+                    </ul>
+                </div>
+                <div style="background-color: #bf1430; padding-top: 10px;"></div>
+            </div>
+
+
+            <div id="logindiv" class="modal" runat="server">
+
+                <asp:Panel runat="server" DefaultButton="loginbtn">
+                    <div id="id01" style="height: 400px; background: white; margin-left: 30%; margin-right: 30%; border: 2px solid #bf1430;">
+
+                        <div style="height: 80px;">
+                            <div style="float: right;">
+                                <asp:Button ID="Button2" CssClass="text_field" runat="server" Text="X" OnClick="close_Click" />
+
+
+                            </div>
+                        </div>
+
+
+
+                        <table style="margin-left: 25px; margin-right: 25px; width: 90%;">
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label1" runat="server" Text="User Name" Font-Bold="True" Font-Overline="False" Font-Strikeout="False"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="user_id_input" runat="server" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Enter Username"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label2" runat="server" Text="Password" Font-Bold="True"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="user_pass_input" runat="server" TextMode="Password" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Enter Password"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="wronglogin" runat="server" Text="Invalid Username or Password" Visible="False" ForeColor="Red"></asp:Label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 20px;">
+                                    <asp:Button ID="loginbtn" runat="server" Text="Submit" Width="100%" CssClass="text_field" OnClick="login_submit_Click" /></td>
+                            </tr>
+
+
+                        </table>
+
+
+
+
+                    </div>
+                </asp:Panel>
+                <div style="height: 200px;"></div>
+
+
+
+            </div>
+
+            <div id="registerdiv" class="modal" runat="server">
+                <asp:Panel runat="server" DefaultButton="register">
+
+                    <div id="id02" style="height: 670px; background: white; margin-left: 30%; margin-right: 30%; border: 2px solid #bf1430;">
+
+                        <div style="height: 80px;">
+                            <div style="float: right;">
+                                <asp:Button ID="Button1" runat="server" CssClass="text_field" Text="X" OnClick="close_Click" />
+                            </div>
+                        </div>
+
+
+                        <table style="margin-left: 25px; margin-right: 25px; width: 90%;">
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label3" runat="server" Text="First Name" Font-Bold="True" Font-Overline="False" Font-Strikeout="False"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="f_name" runat="server" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="First Name"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label5" runat="server" Text="Last Name" Font-Bold="True" Font-Overline="False" Font-Strikeout="False"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="l_name" runat="server" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Last Name"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label8" runat="server" Text="User Name" Font-Bold="True" Font-Overline="False" Font-Strikeout="False"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="u_id" runat="server" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Last Name"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="divOutput">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label4" runat="server" Text="Choose a Password" Font-Bold="True"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="f_pass" runat="server" TextMode="Password" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Enter Password"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label6" runat="server" Text="Repeat the Password" Font-Bold="True"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="l_pass" runat="server" TextMode="Password" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Enter Password"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label7" runat="server" Text="Email" Font-Bold="True" Font-Overline="False" Font-Strikeout="False"></asp:Label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="r_email" runat="server" CssClass="text_field" Width="100%" ToolTip="Please fill out this field" placeholder="Email"></asp:TextBox></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="wrongregister" runat="server" Text="Registration Failed" Visible="False" ForeColor="Red"></asp:Label>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding-top: 20px;">
+                                    <asp:Button ID="register" runat="server" Text="Register" Width="100%" CssClass="text_field" OnClick="register_click" /></td>
+                            </tr>
+                        </table>
+
+
+
+                    </div>
+
+                    <div style="height: 200px;"></div>
+
+                </asp:Panel>
+            </div>
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+
+            <div class="footer">
+                <div style="float: left; width: 69%">
+                    <center><h3>About SGIPC</h3></center>
+                    <p style="margin-left: 40px">
+                        Special Group Interested in Programming Contest.
+			abbreviated as SGIPC. The website is about to help 
+			a contest programmer.
+                    </p>
+                </div>
+                <div style="float: right; width: 30%">
+                    <h4 style="display: block; margin-left: 40px;">Developed by</h4>
+                    <p style="margin-left: 40px">SGIPC,CSE,KUET</p>
+                </div>
+
+            </div>
+    </form>
+
+</body>
+</html>
